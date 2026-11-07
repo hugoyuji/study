@@ -4,7 +4,7 @@ import br.com.library_api.model.Livro;
 
 import java.time.Instant;
 
-public record LivroResponse(
+public record LivroResponseDTO(
         Long id,
         String titulo,
         String isbn,
@@ -15,8 +15,8 @@ public record LivroResponse(
         Instant dataAlteracao
 ) {
 
-    public static LivroResponse from(Livro livro) {
-        return new LivroResponse(
+    public static LivroResponseDTO from(Livro livro) {
+        return new LivroResponseDTO(
                 livro.getId(),
                 livro.getTitulo(),
                 livro.getIsbn(),

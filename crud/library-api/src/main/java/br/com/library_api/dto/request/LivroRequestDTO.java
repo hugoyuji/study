@@ -2,7 +2,7 @@ package br.com.library_api.dto.request;
 
 import jakarta.validation.constraints.*;
 
-public record LivroRequest(
+public record LivroRequestDTO(
 
         @NotBlank(message = "O título é obrigatório.")
         @Size(max = 255, message = "O título deve ter no máximo 255 caracteres.")
@@ -24,7 +24,7 @@ public record LivroRequest(
         String autor
 ) {
 
-        public LivroRequest {
+        public LivroRequestDTO {
                 titulo = titulo == null ? null : titulo.strip();
                 isbn = isbn == null ? null : isbn.strip().replaceAll("[\\s-]", "").toUpperCase();
                 descricao = descricao == null || descricao.isBlank() ? null : descricao.strip();
