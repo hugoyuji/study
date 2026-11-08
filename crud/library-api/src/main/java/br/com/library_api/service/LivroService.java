@@ -30,4 +30,12 @@ public class LivroService {
         return LivroResponseDTO.from(livroSalvo);
     }
 
+    public LivroResponseDTO buscarPorId(Long id) {
+
+        Livro livroEntidade = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Livro não encontrado."));
+
+        return LivroResponseDTO.from(livroEntidade);
+    }
+
 }
