@@ -6,6 +6,8 @@ import br.com.library_api.model.Livro;
 import br.com.library_api.repository.LivroRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LivroService {
 
@@ -38,4 +40,10 @@ public class LivroService {
         return LivroResponseDTO.from(livroEntidade);
     }
 
+    public List<LivroResponseDTO> listar() {
+        return repository.findAll()
+                .stream()
+                .map(LivroResponseDTO::from)
+                .toList();
+    }
 }
