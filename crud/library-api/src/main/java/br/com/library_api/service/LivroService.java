@@ -46,4 +46,20 @@ public class LivroService {
                 .map(LivroResponseDTO::from)
                 .toList();
     }
+
+    public LivroResponseDTO alterar(Long id, LivroRequestDTO livroRequest) {
+
+        Livro livroEntidade = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Livro não encontrado."));
+
+        livroEntidade.setTitulo(livroRequest.titulo());
+        livroEntidade.setIsbn(livroRequest.isbn());
+        livroEntidade.setDescricao(livroRequest.descricao());
+        livroEntidade.setAnoPublicacao(livroRequest.anoPublicacao());
+        livroEntidade.setAutor(livroRequest.autor());
+
+        Livro livroAtualizado = repository.save(livroEntidade);
+
+        return LivroResponseDTO.from(livroAtualizado);
+    }
 }
