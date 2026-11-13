@@ -62,4 +62,12 @@ public class LivroService {
 
         return LivroResponseDTO.from(livroAtualizado);
     }
+
+    public void deletar(Long id) {
+
+        Livro livroEntidade = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Livro não encontrado."));
+
+        repository.delete(livroEntidade);
+    }
 }
