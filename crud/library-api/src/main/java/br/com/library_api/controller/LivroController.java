@@ -25,4 +25,10 @@ public class LivroController {
         URI location = URI.create("/livros/" + livroSalvo.id());
         return ResponseEntity.created(location).body(livroSalvo);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<LivroResponseDTO> buscarPorId(@PathVariable Long id) {
+        LivroResponseDTO livro = service.buscarPorId(id);
+        return ResponseEntity.ok(livro);
+    }
 }
