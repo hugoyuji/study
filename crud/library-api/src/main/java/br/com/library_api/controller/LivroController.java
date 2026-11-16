@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/livros")
@@ -30,5 +31,11 @@ public class LivroController {
     public ResponseEntity<LivroResponseDTO> buscarPorId(@PathVariable Long id) {
         LivroResponseDTO livro = service.buscarPorId(id);
         return ResponseEntity.ok(livro);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<LivroResponseDTO>> listar() {
+        List<LivroResponseDTO> livros = service.listar();
+        return ResponseEntity.ok(livros);
     }
 }
