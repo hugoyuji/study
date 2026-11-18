@@ -38,4 +38,11 @@ public class LivroController {
         List<LivroResponseDTO> livros = service.listar();
         return ResponseEntity.ok(livros);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<LivroResponseDTO> alterar(@PathVariable Long id,
+                                                    @Valid @RequestBody LivroRequestDTO livroRequest) {
+        LivroResponseDTO livroAlterado = service.alterar(id, livroRequest);
+        return ResponseEntity.ok(livroAlterado);
+    }
 }
