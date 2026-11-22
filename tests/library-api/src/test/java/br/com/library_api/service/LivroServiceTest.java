@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -96,5 +97,55 @@ class LivroServiceTest {
         assertEquals("Livro não encontrado.", exception.getMessage());
 
         verify(repository).findById(99L);
+    }
+
+    @Test
+    void deveListarTodosOsLivros() {
+
+        Livro livro1 = new Livro();
+        livro1.setTitulo("O Pequeno Príncipe");
+        livro1.setIsbn("9780156012195");
+        livro1.setDescricao("Uma história sobre amizade");
+        livro1.setAnoPublicacao(1943);
+        livro1.setAutor("Antoine de Saint-Exupéri");
+
+        Livro livro2 = new Livro();
+        livro2.setTitulo("Dom Casmurro");
+        livro2.setIsbn("9788535914849");
+        livro2.setDescricao("Romance sobre ciúme e dúvida");
+        livro2.setAnoPublicacao(1899);
+        livro2.setAutor("Machado de Assis");
+
+        when(repository.findAll()).thenReturn(List.of(livro1, livro2));
+
+        List<LivroResponseDTO> response = service.listar();
+
+        assertNotNull(response);
+        assertEquals(2, response.size());
+
+        assertEquals(1L, response.get(0).id());
+        assertEquals("O Pequeno Príncipe", response.get(0).titulo());
+        assertEquals("9780156012195", response.get(0).isbn());
+        assertEquals("Uma história sobre amizade", response.get(0).descricao());
+        assertEquals(1943, response.get(0).anoPublicacao());
+        assertEquals("Antoine de Saint-Exupéri", response.get(0).autor());
+
+        assertEquals(2L, response.get(1).id());
+        assertEquals("Dom Casmurro", response.get(1).titulo());
+
+        verify(repository).findAll();
+    }
+
+    @Test
+    void deveRetornarListaVaziaQuandoNaoHouverLivros() {
+
+        when(repository.findAll()).thenReturn(List.of());
+
+        List<LivroResponseDTO> response = service.listar();
+
+        assertNotNull(response);
+        assertTrue(response.isEmpty());
+
+        verify(repository).findAll();
     }
 }
