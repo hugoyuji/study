@@ -148,4 +148,62 @@ class LivroServiceTest {
 
         verify(repository).findAll();
     }
+
+    @Test
+    void deveAlterarLivro() {
+
+        Livro livroExistente = new Livro();
+        livroExistente.setTitulo("Título Antigo");
+        livroExistente.setIsbn("0000000000000");
+        livroExistente.setDescricao("Descrição antiga");
+        livroExistente.setAnoPublicacao(1900);
+        livroExistente.setAutor("Autor Antigo");
+
+        LivroRequestDTO request = new LivroRequestDTO(
+                "O Pequeno Príncipe",
+                "9780156012195",
+                "Uma história sobre amizade",
+                1943,
+                "Antoine de Saint-Exupéri"
+        );
+
+        when(repository.findById(1L)).thenReturn(Optional.of(livroExistente));
+        when(repository.save(any(Livro.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        LivroResponseDTO response = service.alterar(1L, request);
+
+        assertNotNull(response);
+        assertEquals(1L, response.id());
+        assertEquals("O Pequeno Príncipe", response.titulo());
+        assertEquals("9780156012195", response.isbn());
+        assertEquals("Uma história sobre amizade", response.descricao());
+        assertEquals(1943, response.anoPublicacao());
+        assertEquals("Antoine de Saint-Exupéri", response.autor());
+
+        verify(repository).findById(1L);
+        verify(repository).save(livroExistente);
+    }
+
+    @Test
+    void deveLancarExcecaoAoAlterarLivroNaoEncontrado() {
+
+        LivroRequestDTO request = new LivroRequestDTO(
+                "O Pequeno Príncipe",
+                "9780156012195",
+                "Uma história sobre amizade",
+                1943,
+                "Antoine de Saint-Exupéri"
+        );
+
+        when(repository.findById(99L)).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> service.alterar(99L, request));
+
+        assertEquals("Livro não encontrado.", exception.getMessage());
+
+        verify(repository).findById(99L);
+        verify(repository, never()).save(any(Livro.class));
+    }
 }
