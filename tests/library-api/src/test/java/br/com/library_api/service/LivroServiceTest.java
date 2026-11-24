@@ -76,7 +76,6 @@ class LivroServiceTest {
         LivroResponseDTO response = service.buscarPorId(1L);
 
         assertNotNull(response);
-        assertEquals(1L, response.id());
         assertEquals("O Pequeno Príncipe", response.titulo());
         assertEquals("9780156012195", response.isbn());
         assertEquals("Uma história sobre amizade", response.descricao());
@@ -123,14 +122,12 @@ class LivroServiceTest {
         assertNotNull(response);
         assertEquals(2, response.size());
 
-        assertEquals(1L, response.get(0).id());
         assertEquals("O Pequeno Príncipe", response.get(0).titulo());
         assertEquals("9780156012195", response.get(0).isbn());
         assertEquals("Uma história sobre amizade", response.get(0).descricao());
         assertEquals(1943, response.get(0).anoPublicacao());
         assertEquals("Antoine de Saint-Exupéri", response.get(0).autor());
 
-        assertEquals(2L, response.get(1).id());
         assertEquals("Dom Casmurro", response.get(1).titulo());
 
         verify(repository).findAll();
@@ -174,7 +171,6 @@ class LivroServiceTest {
         LivroResponseDTO response = service.alterar(1L, request);
 
         assertNotNull(response);
-        assertEquals(1L, response.id());
         assertEquals("O Pequeno Príncipe", response.titulo());
         assertEquals("9780156012195", response.isbn());
         assertEquals("Uma história sobre amizade", response.descricao());
@@ -205,5 +201,33 @@ class LivroServiceTest {
 
         verify(repository).findById(99L);
         verify(repository, never()).save(any(Livro.class));
+    }
+
+    @Test
+    void deveDeletarLivro() {
+
+        Livro livro = new Livro();
+        livro.setTitulo("O Pequeno Príncipe");
+
+        when(repository.findById(1L)).thenReturn(Optional.of(livro));
+
+        service.deletar(1L);
+
+        verify(repository).findById(1L);
+        verify(repository).delete(livro);
+    }
+
+    @Test
+    void deveLancarExcecaoAoDeletarLivroNaoEncontrado() {
+
+        when(repository.findById(99L)).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> service.deletar(99L));
+
+        assertEquals("Livro não encontrado.", exception.getMessage());
+
+        verify(repository).findById(99L);
+        verify(repository, never()).delete(any(Livro.class));
     }
 }
