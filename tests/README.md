@@ -1,4 +1,4 @@
-# 🧪 Testes unitários
+# 🔎 Testes unitários
 
 > Este repositório reúne meus projetos de estudo com foco em praticar testes automatizados, aplicados sobre operações CRUD: `Create` (Criar/cadastrar), `Read` (Ler/consultar), `Update` (Alterar/Atualizar) e `Delete` (Excluir/Deletar).
 
